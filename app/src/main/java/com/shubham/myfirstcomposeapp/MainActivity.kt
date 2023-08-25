@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.*
 import com.shubham.myfirstcomposeapp.ui.theme.MyFirstComposeAppTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -36,7 +37,8 @@ class MainActivity : ComponentActivity() {
             //MyScaffold()
             //MyList()
             //MyLazyList1()
-            MyLazyList2()
+            //MyLazyList2()
+            MyconstraintLayoutView()
         }
     }
 }
@@ -147,6 +149,42 @@ fun MyLazyList2() {
         }
 
     }
+}
+
+@Composable
+fun MyconstraintLayoutView() {
+
+    val constraintSet = ConstraintSet() {
+        val greenBox = createRefFor("greenBox")
+        val redBox = createRefFor("redBox")
+
+        //Can use this guideline also to constraint stuff
+        val guideline = createGuidelineFromTop(0.5f)
+
+        constrain(greenBox) {
+            top.linkTo(parent.top)
+            start.linkTo(parent.start)
+            width = Dimension.value(100.dp)
+            height = Dimension.value(100.dp)
+        }
+
+        constrain(redBox) {
+            top.linkTo(parent.top)
+            start.linkTo(greenBox.end)
+            width = Dimension.value(100.dp)
+            height = Dimension.value(100.dp)
+        }
+
+        createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Spread)
+    }
+
+
+    ConstraintLayout(constraintSet = constraintSet, modifier = Modifier.fillMaxSize()) {
+
+        Box(modifier = Modifier.background(Color.Green).layoutId("greenBox"))
+        Box(modifier = Modifier.background(Color.Red).layoutId("redBox"))
+    }
+
 }
 
 
