@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +31,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             //ImageCard()
-            MyScaffold()
+            //MyScaffold()
+            MyList()
         }
     }
 }
@@ -98,6 +103,25 @@ fun MyScaffold() {
 
         }
 
+    }
+}
+
+@Composable
+fun MyList() {
+
+    //Need to create scrollState so that system remembers where scroll is, and can modify it if required
+    val scrollState = rememberScrollState()
+
+    Column(modifier = Modifier.verticalScroll(scrollState)) {
+        for (i in 1..50) {
+            Text(
+                text = "Index $i",
+                modifier = Modifier.padding(24.dp).fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+
+        }
     }
 }
 
