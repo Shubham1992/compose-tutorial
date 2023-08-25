@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -32,7 +34,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             //ImageCard()
             //MyScaffold()
-            MyList()
+            //MyList()
+            //MyLazyList1()
+            MyLazyList2()
         }
     }
 }
@@ -44,23 +48,15 @@ fun ImageCard(modifier: Modifier = Modifier) {
     val color = remember { mutableStateOf(Color.Black) }
 
     Box(
-        modifier = Modifier.fillMaxSize()
-            .background(color = Color.Blue)
-            .padding(20.dp)
-            .clickable {
-                color.value = Color(
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    Random.nextFloat(), 1f
-                )
-            },
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize().background(color = Color.Blue).padding(20.dp).clickable {
+            color.value = Color(
+                Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f
+            )
+        }, contentAlignment = Alignment.Center
 
     ) {
         Text(
-            text = "Random text",
-            color = color.value,
-            fontSize = 50.sp
+            text = "Random text", color = color.value, fontSize = 50.sp
         )
     }
 
@@ -73,8 +69,7 @@ fun MyScaffold() {
     var textfieldState by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState
+        modifier = Modifier.fillMaxSize(), scaffoldState = scaffoldState
     ) { paddingValue ->
         print(paddingValue)
         Column(
@@ -82,15 +77,11 @@ fun MyScaffold() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(
-                value = textfieldState,
-                label = {
-                    Text(text = "Enter your name")
-                },
-                onValueChange = {
-                    textfieldState = it
-                },
-                singleLine = true
+            TextField(value = textfieldState, label = {
+                Text(text = "Enter your name")
+            }, onValueChange = {
+                textfieldState = it
+            }, singleLine = true
             )
             Spacer(modifier = Modifier.height(50.dp))
             Button(onClick = {
@@ -122,6 +113,39 @@ fun MyList() {
             )
 
         }
+    }
+}
+
+@Composable
+fun MyLazyList1() {
+    LazyColumn {
+        items(50) {
+
+            Text(
+                text = "Index $it",
+                modifier = Modifier.padding(24.dp).fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun MyLazyList2() {
+
+    LazyColumn {
+        itemsIndexed(listOf("My", "Name", "is", "Shubham")) { index, item ->
+
+            Text(
+                text = item,
+                modifier = Modifier.padding(24.dp).fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+
+        }
+
     }
 }
 
