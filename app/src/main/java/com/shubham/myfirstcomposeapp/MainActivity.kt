@@ -1,6 +1,8 @@
 package com.shubham.myfirstcomposeapp
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -11,34 +13,38 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.*
-import com.shubham.myfirstcomposeapp.ui.theme.MyFirstComposeAppTheme
+import androidx.lifecycle.ViewModelProvider
+import com.shubham.myfirstcomposeapp.launched_effect.LaunchedEffectViewModel
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var viewModel: LaunchedEffectViewModel
+    lateinit var context: MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        context = this
         setContent {
             //ImageCard()
             //MyScaffold()
             //MyList()
             //MyLazyList1()
             //MyLazyList2()
-            MyconstraintLayoutView()
+            //MyconstraintLayoutView()
+            viewModel =
+                ViewModelProvider(this@MainActivity).get(LaunchedEffectViewModel::class.java)
+            //MyLaunchedEffect(viewModel, context)
+            MyLaunchedEffect2(viewModel, context)
         }
     }
 }
@@ -184,6 +190,62 @@ fun MyconstraintLayoutView() {
         Box(modifier = Modifier.background(Color.Green).layoutId("greenBox"))
         Box(modifier = Modifier.background(Color.Red).layoutId("redBox"))
     }
+
+}
+
+@Composable
+fun MyLaunchedEffect(viewModel: LaunchedEffectViewModel, context: MainActivity) {
+
+    var counter by remember {
+        mutableStateOf(0)
+    }
+
+    //Whenever counter value updates, this launch effect will be executed
+    LaunchedEffect(key1 = counter) {
+        viewModel.liveData.observe(context) {
+            Log.e("Launched effect", counter.toString())
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Button(modifier = Modifier.width(200.dp).align(Alignment.Center),
+            onClick = {
+                counter++
+            }) {
+            Text(text = "Increase counter")
+        }
+    }
+
+
+}
+
+@Composable
+fun MyLaunchedEffect2(viewModel: LaunchedEffectViewModel, context: MainActivity) {
+
+    var counter by remember {
+        mutableStateOf(0)
+    }
+
+    /**
+     * Whenever counter is changed, the LaunchedEffect will not be called again
+     * because it is not observing counter in its Key1
+     **/
+    LaunchedEffect(key1 = true) {
+        Log.e("Launched effect", counter.toString())
+
+        viewModel.liveData.observe(context) {
+            Log.e("livedata changed", counter.toString())
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Button(modifier = Modifier.width(200.dp).align(Alignment.Center),
+            onClick = {
+                counter++
+                viewModel.updateData()
+            }) {
+            Text(text = "Increase counter")
+        }
+    }
+
 
 }
 
