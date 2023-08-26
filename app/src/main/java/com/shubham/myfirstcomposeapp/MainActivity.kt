@@ -1,5 +1,6 @@
 package com.shubham.myfirstcomposeapp
 
+import SampleData
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.*
 import androidx.lifecycle.ViewModelProvider
+import com.shubham.myfirstcomposeapp.composables.MessageCard
 import com.shubham.myfirstcomposeapp.launched_effect.LaunchedEffectViewModel
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -44,7 +46,14 @@ class MainActivity : ComponentActivity() {
             viewModel =
                 ViewModelProvider(this@MainActivity).get(LaunchedEffectViewModel::class.java)
             //MyLaunchedEffect(viewModel, context)
-            MyLaunchedEffect2(viewModel, context)
+            //MyLaunchedEffect2(viewModel, context)
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(SampleData.conversationSample.size) {
+                    MessageCard(SampleData.conversationSample[it])
+                }
+            }
+
         }
     }
 }
